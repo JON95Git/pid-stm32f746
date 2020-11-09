@@ -83,6 +83,13 @@ static void pid_calculate(void)
     actuator = (int32_t)(pid_output + 0.5);
     // Normalize  duty cycle (range 0 to 10000 - 0% to 100%)
     duty = (uint32_t )actuator + (MAX_PWM_OUTPUT/2);
+
+    if (duty > MAX_PWM_OUTPUT) {
+        duty = MAX_PWM_OUTPUT;
+    } else if (duty < 0){
+        duty = 0;
+    }
+    
 }
 
 static void rpm_calculate(void)
