@@ -1,11 +1,18 @@
 #include "hardware.h"
+#include "stm32746g_discovery.h"
 
 static volatile uint32_t timer_counter = 0;
 
-
 void hardware_init(void)
 {
+    BSP_LED_Init(LED_GREEN);
     encoder_init();
+    pwm_timer_init();
+}
+
+void pwm_timer_init(void)
+{
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 }
 
 uint32_t timer_get_current_tick(void)
