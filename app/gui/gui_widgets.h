@@ -9,8 +9,8 @@
 #endif
 
 #define CHART_POINTS_NUMBER 1024
-#define CHART_RANGE_2 512
-#define CHART_RANGE 512
+#define CHART_RANGE_2 200
+#define CHART_RANGE 200
 #define CHART_DOT_NUMBERS 45
 
 typedef enum {
