@@ -1,5 +1,4 @@
 #include "gui_chart.h"
-#include "pid.h"
 #include <math.h>
 
 static gui_chart_st chart_st;
