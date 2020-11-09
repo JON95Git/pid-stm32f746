@@ -12,12 +12,12 @@
 
 #define PID_PARAM_KP 1
 #define PID_PARAM_KI 1
-#define PID_PARAM_KD 0.5
+#define PID_PARAM_KD 0.0005
 
 #define PULSES_PER_REVOLUTION 20
 #define BASET_TIME 1000
 #define MAX_PWM_OUTPUT 1000
-#define SET_POINT_INIT 150
+#define SET_POINT_INIT 120
 
 void pid_config(void);
 void pid_process(void);
