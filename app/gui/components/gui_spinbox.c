@@ -51,11 +51,28 @@ static void _gui_create_spinbox_minus_button(lv_obj_t *parent, _gui_spinbox_st *
 static void _gui_create_spinbox(lv_obj_t *parent, _gui_spinbox_st *spinbox_st)
 {
     spinbox_st->spinbox = lv_spinbox_create(parent, NULL);
-    lv_spinbox_set_range(spinbox_st->spinbox, -1000, 90000);
-    lv_spinbox_set_digit_format(spinbox_st->spinbox, 3, 1);
+    lv_spinbox_set_range(spinbox_st->spinbox, 0, 100);
+    lv_spinbox_set_digit_format(spinbox_st->spinbox, 3, 2);
     lv_spinbox_step_prev(spinbox_st->spinbox);
-    lv_obj_set_width(spinbox_st->spinbox, 60);
+    lv_obj_set_width(spinbox_st->spinbox, 50);
     lv_obj_align(spinbox_st->spinbox, NULL, LV_ALIGN_CENTER, spinbox_st->x_ofs, spinbox_st->y_ofs);
+}
+
+static void _gui_create_rpm_spinbox(lv_obj_t *parent, _gui_spinbox_st *spinbox_st)
+{
+    spinbox_st->spinbox = lv_spinbox_create(parent, NULL);
+    lv_spinbox_set_range(spinbox_st->spinbox, 0, 200);
+    lv_spinbox_set_digit_format(spinbox_st->spinbox, 3, 0);
+    lv_spinbox_step_prev(spinbox_st->spinbox);
+    lv_obj_set_width(spinbox_st->spinbox, 48);
+    lv_obj_align(spinbox_st->spinbox, NULL, LV_ALIGN_CENTER, spinbox_st->x_ofs, spinbox_st->y_ofs);
+}
+
+void gui_create_rpm_spinbox(lv_obj_t *parent, _gui_spinbox_st *spinbox_st)
+{
+    _gui_create_rpm_spinbox(parent, spinbox_st);
+    _gui_create_spinbox_plus_button(parent, spinbox_st);
+    _gui_create_spinbox_minus_button(parent, spinbox_st);
 }
 
 void gui_create_spinbox(lv_obj_t *parent, _gui_spinbox_st *spinbox_st)

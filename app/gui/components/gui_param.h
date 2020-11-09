@@ -11,6 +11,8 @@
 #include "gui_widgets.h"
 #include "gui_spinbox.h"
 
-void gui_create_parameter_tab_components(lv_obj_t *parent);
+#define USER_COLOR lv_color_hex(0x034885)
+
+void gui_create_parameter_tab(lv_obj_t *parent);
 
 #endif /* __GUI_PARAM_H */

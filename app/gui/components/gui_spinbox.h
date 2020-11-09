@@ -18,6 +18,7 @@ typedef struct {
 } _gui_spinbox_st;
 
 void gui_create_spinbox(lv_obj_t *parent, _gui_spinbox_st *spinbox_st);
+void gui_create_rpm_spinbox(lv_obj_t *parent, _gui_spinbox_st *spinbox_st);
 void gui_get_spinbox_value(lv_obj_t *spinbox, int32_t *value);
 void gui_set_spinbox_value(lv_obj_t *spinbox, int32_t value);
 
