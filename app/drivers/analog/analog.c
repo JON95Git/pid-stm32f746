@@ -52,7 +52,7 @@ void analog_callback(ADC_HandleTypeDef *hadc)
 {
     if (hadc->Instance == ANALOG_ADC_INSTANCE) {
         analog_stop();
-        osSignalSet(analogTaskHandle, ANALOG_TASK_SIGNAL);
+        // osSignalSet(analogTaskHandle, ANALOG_TASK_SIGNAL);
     }   
 }
 
