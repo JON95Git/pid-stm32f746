@@ -14,6 +14,8 @@
 #endif
 #include "gui_widgets.h"
 
+// #define TABVIEW_LEFT
+
 typedef struct {
     lv_group_t *group;
     lv_obj_t *tabview;

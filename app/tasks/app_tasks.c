@@ -8,7 +8,6 @@ osMutexId  (lvgl_mutex_id);
 
 /* Tasks handlers */
 osThreadId lvglTaskHandle;
-osThreadId analogTaskHandle;
 osThreadId pidTaskHandle;
 
 void app_create_tasks(void)
@@ -16,9 +15,6 @@ void app_create_tasks(void)
     osThreadDef(lvglTask, lvgl_task, osPriorityHigh, 0, 2048);
     lvglTaskHandle = osThreadCreate(osThread(lvglTask), NULL);
     
-    osThreadDef(analogTask, analog_task, osPriorityNormal, 0, 512);
-    analogTaskHandle = osThreadCreate(osThread(analogTask), NULL);
-
     osThreadDef(pidTask, pid_task, osPriorityNormal, 0, 512);
     pidTaskHandle = osThreadCreate(osThread(pidTask), NULL);
 }
@@ -34,29 +30,13 @@ void lvgl_task(void const * argument)
     }
 }
 
-void analog_task(void const * argument)
-{
-    osEvent evt;
-    analog_init();
-    analog_start();
-    for (;;) {
-        evt = osSignalWait(ANALOG_TASK_SIGNAL, osWaitForever);
-        if (evt.status == osEventSignal)  {
-            analog_process();
-        }
-    }
-}
-
 void pid_task(void const * argument)
 {
-    if (HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1) != HAL_OK) {
-        /* PWM Generation Error */
-        // Error_Handler();
-    }
     pid_config();
+    // Delay to move DC motor from inertia
     osDelay(2000);
     for(;;) {
-        pid_try_pid();
-        // osDelay(1000);
+        pid_process();
+        osDelay(BASET_TIME);
     }
 }

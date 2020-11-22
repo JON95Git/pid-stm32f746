@@ -1,5 +1,8 @@
 #include "gui_param.h"
 
+static lv_obj_t *update_button;
+static lv_obj_t *clear_button;
+
 static _gui_label_st kp_label;
 static _gui_label_st ki_label;
 static _gui_label_st kd_label;
@@ -10,12 +13,30 @@ static _gui_spinbox_st ki_spinbox;
 static _gui_spinbox_st kd_spinbox;
 static _gui_spinbox_st sp_spinbox;
 
+static void _gui_create_labels(lv_obj_t *parent);
+static void _gui_init_spinbox(lv_obj_t *parent, lv_coord_t x_ofs, lv_coord_t y_ofs, _gui_spinbox_st *spinbox);
+static void _gui_init_rpm_spinbox(lv_obj_t *parent, lv_coord_t x_ofs, lv_coord_t y_ofs, _gui_spinbox_st *spinbox);
+static void gui_set_init_parameters(void);
 static void gui_set_parameters(void);
 static void gui_get_pid_data_screen(void);
+static void gui_set_pid_data_screen(void);
 static void gui_clean_pid_data_screen(void);
 static void _gui_create_button(lv_obj_t *parent);
+static void _gui_config_buttons(void);
 static void update_event_handler(lv_obj_t * obj, lv_event_t event);
 static void clear_event_handler(lv_obj_t * obj, lv_event_t event);
+
+void gui_create_parameter_tab(lv_obj_t *parent)
+{
+    _gui_init_spinbox(parent, -100, -80+10, &kp_spinbox);
+    _gui_init_spinbox(parent, -100, -10+10, &ki_spinbox);
+    _gui_init_spinbox(parent, 120, -80+10, &kd_spinbox);
+    _gui_init_rpm_spinbox(parent, 120, -10+10, &sp_spinbox);
+    _gui_create_labels(parent);
+    _gui_create_button(parent);
+    _gui_config_buttons();
+    gui_set_init_parameters();
+}
 
 static void _gui_create_param_label(lv_obj_t *parent, const char *string, lv_coord_t x_ofs, lv_coord_t y_ofs, _gui_label_st *label_st)
 {
@@ -28,11 +49,18 @@ static void _gui_create_param_label(lv_obj_t *parent, const char *string, lv_coo
     label_st->label  = gui_create_label(label_st);
 }
 
-static void _gui_create_spinbox_parameter_tab(lv_obj_t *parent, lv_coord_t x_ofs, lv_coord_t y_ofs, _gui_spinbox_st *spinbox)
+static void _gui_init_spinbox(lv_obj_t *parent, lv_coord_t x_ofs, lv_coord_t y_ofs, _gui_spinbox_st *spinbox)
 {
     spinbox->x_ofs = x_ofs;
     spinbox->y_ofs = y_ofs;
     gui_create_spinbox(parent, spinbox);
+}
+
+static void _gui_init_rpm_spinbox(lv_obj_t *parent, lv_coord_t x_ofs, lv_coord_t y_ofs, _gui_spinbox_st *spinbox)
+{
+    spinbox->x_ofs = x_ofs;
+    spinbox->y_ofs = y_ofs;
+    gui_create_rpm_spinbox(parent, spinbox);
 }
 
 static void _gui_create_labels(lv_obj_t *parent)
@@ -41,16 +69,6 @@ static void _gui_create_labels(lv_obj_t *parent)
     _gui_create_param_label(parent, "KI", -200, -10+10, &ki_label);
     _gui_create_param_label(parent, "KD", 20, -80+10, &kd_label);
     _gui_create_param_label(parent, "SP", 20, -10+10, &sp_label);
-}
-
-void gui_create_parameter_tab_components(lv_obj_t *parent)
-{
-    _gui_create_spinbox_parameter_tab(parent, -100, -80+10, &kp_spinbox);
-    _gui_create_spinbox_parameter_tab(parent, -100, -10+10, &ki_spinbox);
-    _gui_create_spinbox_parameter_tab(parent, 120, -80+10, &kd_spinbox);
-    _gui_create_spinbox_parameter_tab(parent, 120, -10+10, &sp_spinbox);
-    _gui_create_labels(parent);
-    _gui_create_button(parent);
 }
 
 static void update_event_handler(lv_obj_t * obj, lv_event_t event)
@@ -74,19 +92,32 @@ static void _gui_create_button(lv_obj_t *parent)
 {
     lv_obj_t *button_label;
 
-    lv_obj_t *update_button = lv_btn_create(parent, NULL);
+    update_button = lv_btn_create(parent, NULL);
     lv_obj_set_event_cb(update_button, update_event_handler);
     lv_obj_align(update_button, NULL, LV_ALIGN_CENTER, 120, 40+10);
 
     button_label = lv_label_create(update_button, NULL);
     lv_label_set_text(button_label, "Update PID");
 
-    lv_obj_t *clear_button = lv_btn_create(parent, NULL);
+    clear_button = lv_btn_create(parent, NULL);
     lv_obj_set_event_cb(clear_button, clear_event_handler);
     lv_obj_align(clear_button, NULL, LV_ALIGN_CENTER, -100, 40+10);
 
     button_label = lv_label_create(clear_button, NULL);
-    lv_label_set_text(button_label, "Clear PID");
+    lv_label_set_text(button_label, "Clear PID data");
+}
+
+static void _gui_config_buttons(void)
+{
+    lv_obj_set_style_local_bg_color(update_button, LV_OBJ_PART_MAIN, LV_BTN_STATE_PRESSED, USER_COLOR);
+    lv_obj_set_style_local_bg_color(update_button, LV_OBJ_PART_MAIN, LV_BTN_STATE_RELEASED, USER_COLOR);
+    lv_obj_set_style_local_bg_color(clear_button, LV_OBJ_PART_MAIN, LV_BTN_STATE_PRESSED, USER_COLOR);
+    lv_obj_set_style_local_bg_color(clear_button, LV_OBJ_PART_MAIN, LV_BTN_STATE_RELEASED, USER_COLOR);
+
+    lv_obj_set_style_local_text_color(update_button, LV_OBJ_PART_MAIN, LV_BTN_STATE_PRESSED, LV_COLOR_WHITE);
+    lv_obj_set_style_local_text_color(update_button, LV_OBJ_PART_MAIN, LV_BTN_STATE_RELEASED, LV_COLOR_WHITE);
+    lv_obj_set_style_local_text_color(clear_button, LV_OBJ_PART_MAIN, LV_BTN_STATE_PRESSED, LV_COLOR_WHITE);
+    lv_obj_set_style_local_text_color(clear_button, LV_OBJ_PART_MAIN, LV_BTN_STATE_RELEASED, LV_COLOR_WHITE);
 }
 
 static void gui_clean_pid_data_screen(void)
@@ -111,4 +142,20 @@ static void gui_set_parameters(void)
 #ifdef EMBEDDED
     pid_set_parameters(kp_spinbox.value, ki_spinbox.value, kd_spinbox.value, sp_spinbox.value);
 #endif
+}
+
+static void gui_set_pid_data_screen(void)
+{
+    gui_set_spinbox_value(kp_spinbox.spinbox, kp_spinbox.value);
+    gui_set_spinbox_value(ki_spinbox.spinbox, ki_spinbox.value);
+    gui_set_spinbox_value(kd_spinbox.spinbox, kd_spinbox.value);
+    gui_set_spinbox_value(sp_spinbox.spinbox, sp_spinbox.value);
+}
+
+static void gui_set_init_parameters(void)
+{
+#ifdef EMBEDDED
+    pid_get_parameters(&kp_spinbox.value, &ki_spinbox.value, &kd_spinbox.value, &sp_spinbox.value);
+#endif
+    gui_set_pid_data_screen();
 }

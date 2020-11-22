@@ -3,6 +3,7 @@
 
 #ifdef EMBEDDED
 #include "lvgl.h"
+#include "pid.h"
 #else
 #include "lvgl/lvgl.h"
 #endif

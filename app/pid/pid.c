@@ -1,20 +1,22 @@
 #include "pid.h"
+#include "stm32746g_discovery.h"
 
-float pid_error;
-uint32_t duty = 0;
-float set_point = 600;
-float process_variable;
-float feedback_value;
-uint32_t actuator;
-arm_pid_instance_f32 PID;
-volatile int32_t encoder_value;
+static float set_point = SET_POINT_INIT;
+static float pid_output;
+static float error;
 
-volatile uint32_t rpm = 0;
-volatile uint32_t pulsos = 0;
-volatile bool is_print_variable = false;
+static arm_pid_instance_f32 PID;
+static uint32_t actuator;
+static uint32_t duty = 0;
+static volatile uint32_t rpm = 0;
+static volatile uint32_t pulses = 0;
 
-static void update_duty_cycle(uint16_t duty_percent);
+static void rpm_calculate(void);
+static void pid_calculate(void);
+static void update_duty_cycle(void);
+#ifdef PID_DEBUG
 static void print_variables(void);
+#endif
 
 void pid_config(void)
 {
@@ -24,93 +26,97 @@ void pid_config(void)
     arm_pid_init_f32(&PID, 1);
 }
 
-void pid_get_parameters(uint32_t *kp, uint32_t *ki, uint32_t *kd, uint32_t *sp)
+void pid_get_parameters(int32_t *kp, int32_t *ki, int32_t *kd, int32_t *sp)
 {
-    // gui_get_parameters(&kp, &ki, &kd, &sp);
+    *kp = (PID_PARAM_KP) * 10;
+    *ki = (PID_PARAM_KI) * 10;
+    *kd = (PID_PARAM_KD) * 10;
+    *sp = (set_point);
+}
+
+void pid_get_data(int16_t *pv, int16_t *sp)
+{
+    *pv = (int16_t) (rpm + 0.5);
+    *sp = (int16_t) (set_point + 0.5);
 }
 
 void pid_set_parameters(uint32_t kp, uint32_t ki, uint32_t kd, uint32_t sp)
 {
-    PID.Kp = kp;
-    PID.Ki = ki;
-    PID.Kd = kd;
+    PID.Kp = (kp * 1.0) / 10;
+    PID.Ki = (ki * 1.0) / 10;
+    PID.Kd = (kd * 1.0) / 10;
     set_point = sp;
     arm_pid_reset_f32(&PID);
 }
 
-void pid_try_pid(void)
+void pid_process(void)
 {
-    /* calculo RPM */
     rpm_calculate();
+    pid_calculate();
+    update_duty_cycle();
+#ifdef PID_DEBUG
+    print_variables();
+#endif
 
-    /* controle PID */
-    feedback_value = rpm;
-    pid_error = feedback_value - set_point; //try invert this
-    process_variable = arm_pid_f32(&PID, pid_error);
-    actuator = (int32_t)(process_variable + 0.5);
-    duty = (uint32_t )100 - actuator;
-    // update_duty_cycle(duty);
-
-    TIM1->CCR1 = 280;
-    if (is_print_variable) {
-        print_variables();
-        is_print_variable = false;
-    }
-}
-
-void rpm_calculate(void)
-{
-    static unsigned long last_interrupt_time = 0;
-    unsigned long interrupt_time = timer_get_current_tick();
-
-    if (interrupt_time - last_interrupt_time >= DEBOUNCE_TIME) {
-        rpm = (60 * DEBOUNCE_TIME / PULSES_PER_REVOLUTION ) / (interrupt_time - last_interrupt_time) * pulsos;
-        pulsos = 0;
-        last_interrupt_time = timer_get_current_tick();
-        is_print_variable = true;
-    }
-}
-
-static void update_duty_cycle(uint16_t duty_percent)
-{
-    uint16_t duty_int32;
-    
-    if (duty_percent > 100) {
-        duty_percent = 100;
-    } else if (duty_percent < 0) {
-        duty_percent = 0;
-    }
-
-    duty_int32 = duty_percent * 1000 / 100;
-
-    TIM1->CCR1 = duty_int32;
 }
 
 void encoder_callback(TIM_HandleTypeDef *htim)
 {
-    if (htim->Instance == TIM3) {
-        encoder_value = TIM3->CNT;
-    }
-    pulsos++;
-}
-
-static void print_variables(void)
-{
-    printf("RPM.............: %ld \n\r", rpm);
-    printf("set_point.......: %.2f \n\r", set_point);
-    printf("pid_error.......: %.2f \n\r", pid_error);
-    
-    printf("process_variable: %.2f \n\r", process_variable);
-    printf("actuator........: %ld \n\r", actuator);
-    printf("duty............: %ld \n\r", duty);
-    // printf("encoder_value...: %ld \n\r", encoder_value);
-    
-    printf("---------------------------------------------\n\r");
-    printf("---------------------------------------------\n\r");
-    printf("---------------------------------------------\n\r");
+    pulses++;
 }
 
 void get_rpm(uint16_t *raw_rpm)
 {
     *raw_rpm = rpm;
 }
+
+void get_pwm_duty(uint16_t *pwm_duty)
+{
+    *pwm_duty = duty;
+}
+
+static void pid_calculate(void)
+{
+    error = set_point - rpm;
+    pid_output = arm_pid_f32(&PID, error);
+    // Convert from float to uint32_t
+    actuator = (int32_t)(pid_output + 0.5);
+    // Normalize  duty cycle (range 0 to 10000 - 0% to 100%)
+    duty = (uint32_t )actuator + (MAX_PWM_OUTPUT/2);
+
+    if (duty > MAX_PWM_OUTPUT) {
+        duty = MAX_PWM_OUTPUT;
+    } else if (duty < 0){
+        duty = 0;
+    }
+    
+}
+
+static void rpm_calculate(void)
+{
+    rpm = (60 * BASET_TIME / PULSES_PER_REVOLUTION ) / BASET_TIME * pulses;
+    pulses = 0;
+}
+
+static void update_duty_cycle(void)
+{
+    TIM1->CCR1 = duty;
+}
+
+#ifdef PID_DEBUG
+static void print_variables(void)
+{
+    printf("RPM.............: %ld \n\r", rpm);
+    printf("KP..............: %.2f \n\r", PID.Kp);
+    printf("KI..............: %.2f \n\r", PID.Ki);
+    printf("KD..............: %.2f \n\r", PID.Kd);
+    printf("set_point.......: %.2f \n\r", set_point);
+    printf("error...........: %.2f \n\r", error);
+    printf("pid_output......: %.2f \n\r", pid_output);
+    printf("actuator........: %ld \n\r", actuator);
+    printf("duty............: %ld \n\r", duty);
+    printf("---------------------------------------------\n\r");
+    printf("---------------------------------------------\n\r");
+    printf("---------------------------------------------\n\r");
+}
+#endif
