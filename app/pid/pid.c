@@ -28,10 +28,10 @@ void pid_config(void)
 
 void pid_get_parameters(int32_t *kp, int32_t *ki, int32_t *kd, int32_t *sp)
 {
-    *kp = (int32_t) (PID_PARAM_KP + 0.5) * 10;
-    *ki = (int32_t) (PID_PARAM_KI + 0.5) * 10;
-    *kd = (int32_t) (PID_PARAM_KD + 0.5) * 5;
-    *sp = (int32_t) (set_point + 0.5);
+    *kp = (PID_PARAM_KP) * 10;
+    *ki = (PID_PARAM_KI) * 10;
+    *kd = (PID_PARAM_KD) * 10;
+    *sp = (set_point);
 }
 
 void pid_get_data(int16_t *pv, int16_t *sp)

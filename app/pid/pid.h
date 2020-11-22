@@ -8,11 +8,11 @@
 #include "tim.h"
 #include "analog.h"
 
-#define PID_DEBUG
+//#define PID_DEBUG
 
-#define PID_PARAM_KP 1
-#define PID_PARAM_KI 1
-#define PID_PARAM_KD 0.0005
+#define PID_PARAM_KP 0.45
+#define PID_PARAM_KI 0.45
+#define PID_PARAM_KD 0
 
 #define PULSES_PER_REVOLUTION 20
 #define BASET_TIME 1000
