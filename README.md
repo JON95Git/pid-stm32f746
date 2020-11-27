@@ -40,3 +40,8 @@ To run this project you need
 - RPM sensor (based on LM393)
 - Encoder disc 20 steps
 - Low pass filter
+
+
+## Circuit diagram
+
+![Diagram](stm32-pid-diagram.png)
