@@ -10,15 +10,15 @@ Development was done using `STM32F746g-Discovery` board from STMicroelectronics
 # Graphical interface
 The first screen contains buttons and controls for update/clear PID variables and set point
 
-![Aplicacao](pid-gui-screen-param.png)
+![Aplicacao](images/pid-gui-screen-param.png)
 
 The second screen contains two widgets to monitor input and output system values, PWM duty cycle to mosfet driver and RPM
 
-![Aplicacao](pid-gui-screen-monitor.png)
+![Aplicacao](images/pid-gui-screen-monitor.png)
 
 The third screen contains a graph to show data
 
-![Aplicacao](pid-gui-screen-graph.png)
+![Aplicacao](images/pid-gui-screen-graph.png)
 
 # Dependencies
 
