@@ -41,7 +41,6 @@ To run this project you need
 - Encoder disc 20 steps
 - Low pass filter
 
-
 ## Circuit diagram
 
 ![Diagram](stm32-pid-diagram.png)
