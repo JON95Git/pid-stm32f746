@@ -1,4 +1,5 @@
 #include "gui_widgets.h"
+#include <stdio.h>
 
 void gui_set_text_label(lv_obj_t *label, const char *text)
 {
@@ -61,7 +62,7 @@ void concatenate_strings(char *string_dst, char *string_src)
 
 void int_to_string(int32_t integer, uint16_t string_len, char *string)
 {
-    snprintf(string, string_len, "%d", integer);
+    snprintf(string, string_len, "%ld", integer);
 }
 
 void float_to_int16(float float_point, int16_t *integer)
