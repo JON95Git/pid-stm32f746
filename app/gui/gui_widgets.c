@@ -1,4 +1,5 @@
 #include "gui_widgets.h"
+#include <stdio.h>
 
 void gui_set_text_label(lv_obj_t *label, const char *text)
 {
@@ -56,7 +57,7 @@ void gui_refresh_chart(lv_obj_t *chart)
 
 void concatenate_strings(char *string_dst, char *string_src)
 {
-    strcat(string_dst, string_src);
+    strcat(string_dst, (const char *)string_src);
 }
 
 void int_to_string(int32_t integer, uint16_t string_len, char *string)

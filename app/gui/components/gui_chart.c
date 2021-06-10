@@ -113,6 +113,9 @@ static void update_chart_task(lv_task_t *task)
     gui_chart_st *chart = (gui_chart_st *)(task->user_data);
 #ifdef EMBEDDED
     pid_get_data(&process_variable, &setpoint);
+#else
+    process_variable = 10;
+    setpoint = 10;
 #endif
     _gui_update_chart_points(chart, process_variable, setpoint);
 }

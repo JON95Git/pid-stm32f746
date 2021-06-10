@@ -56,7 +56,7 @@ void gui_add_style_to_obj(lv_obj_t *obj, lv_style_t *style);
 void gui_create_task(_gui_task_st *task_st);
 void set_align(lv_obj_t *obj, lv_align_t align, lv_coord_t x_ofs, lv_coord_t y_ofs);
 void set_size(lv_obj_t *obj, lv_coord_t size_w, lv_coord_t size_h);
-void concatenate_strings(char *string_src, char *string_dst);
+void concatenate_strings(char *string_dst, char *string_src);
 void int_to_string(int32_t integer, uint16_t string_len, char *string);
 void float_to_int16(float float_point, int16_t *integer);
 

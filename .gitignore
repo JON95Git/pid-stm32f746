@@ -1,0 +1,4 @@
+.settings
+.vscode
+build
+*.log
