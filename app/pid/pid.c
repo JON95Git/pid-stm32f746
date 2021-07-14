@@ -77,6 +77,7 @@ void get_pwm_duty(uint16_t *pwm_duty)
 
 static void pid_calculate(void)
 {
+    //https://www.arduinoecia.com.br/motor-dc-com-encoder-arduino
     error = set_point - rpm;
     pid_output = arm_pid_f32(&PID, error);
     // Convert from float to uint32_t

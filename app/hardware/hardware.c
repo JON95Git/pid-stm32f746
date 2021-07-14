@@ -5,7 +5,7 @@ static volatile uint32_t timer_counter = 0;
 
 void hardware_init(void)
 {
-    BSP_LED_Init(LED_GREEN);
+    // BSP_LED_Init(LED_GREEN);
     encoder_init();
     pwm_timer_init();
 }
@@ -27,6 +27,8 @@ void timer_update_callback(void)
 
 void encoder_init(void)
 {
+    // PC7 ARDUINO RX/D0
+    // PB4 ARDUINO PWM/D3
     HAL_TIM_OC_Start_IT(&htim3, TIM_CHANNEL_ALL);
     HAL_TIM_Encoder_Start_IT(&htim3, TIM_CHANNEL_ALL);
 }
