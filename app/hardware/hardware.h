@@ -5,6 +5,7 @@
 #include "tim.h"
 #include "analog.h"
 
+void init_fatfs(void);
 void hardware_init(void);
 void encoder_init(void);
 void encoder_stop(void);

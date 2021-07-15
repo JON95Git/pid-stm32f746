@@ -5,6 +5,7 @@
 #include "retarget.h"
 #include "main.h"
 #include "usart.h"
+#include "stm32746g_discovery.h"
 
 void system_utils_init(void);
 void error_handler(void);

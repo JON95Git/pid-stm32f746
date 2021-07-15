@@ -10,7 +10,7 @@ void error_handler(void)
 {
     while (1)
     {
-        // BSP_LED_Toggle(RED_LED);
+        BSP_LED_Toggle(LED_GREEN);
         HAL_Delay(250);
     }
 }
