@@ -1,12 +1,12 @@
 /**
   ******************************************************************************
-  * File Name          : gpio.c
-  * Description        : This file provides code for the configuration
-  *                      of all used GPIO pins.
+  * @file    gpio.c
+  * @brief   This file provides code for the configuration
+  *          of all used GPIO pins.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -19,6 +19,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gpio.h"
+
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
@@ -147,9 +148,9 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PBPin PBPin PBPin PBPin 
+  /*Configure GPIO pins : PBPin PBPin PBPin PBPin
                            PBPin PBPin PBPin */
-  GPIO_InitStruct.Pin = ULPI_D7_Pin|ULPI_D6_Pin|ULPI_D5_Pin|ULPI_D3_Pin 
+  GPIO_InitStruct.Pin = ULPI_D7_Pin|ULPI_D6_Pin|ULPI_D5_Pin|ULPI_D3_Pin
                           |ULPI_D2_Pin|ULPI_D1_Pin|ULPI_D4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -165,9 +166,9 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Alternate = GPIO_AF8_SPDIFRX;
   HAL_GPIO_Init(SPDIF_RX0_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PCPin PCPin PCPin PC9 
+  /*Configure GPIO pins : PCPin PCPin PCPin PC9
                            PC8 */
-  GPIO_InitStruct.Pin = SDMMC_CK_Pin|SDMMC_D3_Pin|SDMMC_D2_Pin|GPIO_PIN_9 
+  GPIO_InitStruct.Pin = SDMMC_CK_Pin|SDMMC_D3_Pin|SDMMC_D2_Pin|GPIO_PIN_9
                           |GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -303,9 +304,9 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DCMI_PWR_EN_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PHPin PHPin PHPin PHPin 
+  /*Configure GPIO pins : PHPin PHPin PHPin PHPin
                            PHPin */
-  GPIO_InitStruct.Pin = DCMI_D4_Pin|DCMI_D3_Pin|DCMI_D0_Pin|DCMI_D2_Pin 
+  GPIO_InitStruct.Pin = DCMI_D4_Pin|DCMI_D3_Pin|DCMI_D0_Pin|DCMI_D2_Pin
                           |DCMI_D1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
