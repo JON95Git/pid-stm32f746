@@ -44,3 +44,8 @@ To run this project you need
 ## Circuit diagram
 
 ![Diagram](stm32-pid-diagram.png)
+
+## Application running
+
+You can see the application running [here](https://www.youtube.com/watch?v=ZlJbMAFaLPU)
+
