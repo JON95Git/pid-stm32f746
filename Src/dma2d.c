@@ -1,12 +1,12 @@
 /**
   ******************************************************************************
-  * File Name          : DMA2D.c
-  * Description        : This file provides code for the configuration
-  *                      of the DMA2D instances.
+  * @file    dma2d.c
+  * @brief   This file provides code for the configuration
+  *          of the DMA2D instances.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -86,7 +86,7 @@ void HAL_DMA2D_MspDeInit(DMA2D_HandleTypeDef* dma2dHandle)
 
   /* USER CODE END DMA2D_MspDeInit 1 */
   }
-} 
+}
 
 /* USER CODE BEGIN 1 */
 

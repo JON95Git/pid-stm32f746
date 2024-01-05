@@ -12,10 +12,10 @@ osThreadId pidTaskHandle;
 
 void app_create_tasks(void)
 {
-    osThreadDef(lvglTask, lvgl_task, osPriorityHigh, 0, 2048);
-    lvglTaskHandle = osThreadCreate(osThread(lvglTask), NULL);
+    // osThreadDef(lvglTask, lvgl_task, osPriorityHigh, 0, 2048);
+    // lvglTaskHandle = osThreadCreate(osThread(lvglTask), NULL);
     
-    osThreadDef(pidTask, pid_task, osPriorityNormal, 0, 512);
+    osThreadDef(pidTask, pid_task, osPriorityNormal, 0, 2048);
     pidTaskHandle = osThreadCreate(osThread(pidTask), NULL);
 }
 
@@ -32,6 +32,7 @@ void lvgl_task(void const * argument)
 
 void pid_task(void const * argument)
 {
+    init_fatfs();
     pid_config();
     // Delay to move DC motor from inertia
     osDelay(2000);
